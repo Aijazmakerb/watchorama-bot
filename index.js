@@ -25,19 +25,25 @@ app.get('/visited', async (req, res) => {
 });
 
 app.get('/playing', async (req, res) => {
-    const { text } = req.query;
+  const { name, episode, season } = req.query;
 
-    await sendMessage(
-        `
-        Started Playing:
-        IP: ${getClientIP(req)}
-        On: ${getCurrentDateAndTime()}
-        From: ${getUserAgent(req)}
-        Playing: ${text}
-        `
-    );
+  let logMessage =
+    `
+      Started Playing:
+      IP: ${getClientIP(req)}
+      On: ${getCurrentDateAndTime()}
+      From: ${getUserAgent(req)}
+      Playing:
+      ${name}
+    `
 
-    res.sendStatus(200);
+  if (season && episode) {
+    logMessage += `  Season: ${season} : Episode: ${episode}`;
+  }
+
+  await sendMessage(logMessage);
+
+  res.sendStatus(200);
 })
 
 
